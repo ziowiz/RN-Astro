@@ -12,7 +12,7 @@ export default function Application() {
 			<NavigationContainer>
 				<Stack.Navigator style={styles.container}>
 					<Stack.Screen
-						name="Numerologia"
+						name="Нумерология"
 						component={NumerologiaScreen}
 					/>
 				</Stack.Navigator>

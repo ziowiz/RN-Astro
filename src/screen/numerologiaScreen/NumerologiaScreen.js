@@ -1,127 +1,65 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, Button, Picker } from "react-native";
-import { StateContext } from "../../context/stateContext";
-import {
-	interpretCharacter,
-	interpretEnergy,
-	interpretInterest,
-	interpretHealth,
-	interpretLogic,
-	interpretLabor,
-	interpretLuck,
-	interpretDuty,
-	textAbaut,
-	interpretMemory,
-} from "./pifagor"; // Assuming the file is named pifagor.js
-import calculateMatrix from "./formulas"; // Assuming the file is named calculateMatrix.js
+import { View, Text, StyleSheet } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
-export default function App() {
-	const context = useContext(StateContext);
-	const [error, setError] = useState("");
-	const [day, setDay] = useState("");
-	const [month, setMonth] = useState("");
-	const [year, setYear] = useState("");
+import KabbalaComponent from "./kabbala/KabbalaComponent";
+import PifagorComponent from "./pifagor/PifagorComponent";
+export default function NumerologiaScreen() {
 	const [numerologyType, setNumerologyType] = useState("pythagorean");
-	const [matrix, setMatrix] = useState(null);
-
-	const handleSubmit = () => {
-		if (!day || !month || !year) {
-			setError("Не все поля заполнены. Не хватает исходных данных");
-			return;
-		}
-		if (numerologyType === "pythagorean") {
-			const matrix = calculateMatrix(day, month, year);
-			setMatrix(matrix);
-		} else if (numerologyType === "kabbalah") {
-			// Assuming calculateKabbalah is a function defined elsewhere
-			// calculateKabbalah(named, surname);
-		} else {
-			setError("Не все поля заполнены. Не хватает исходных данных");
-		}
-	};
 
 	return (
-		<View style={{ padding: 20 }}>
-			<Text>День:</Text>
-			<TextInput
-				style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-				placeholder="DD"
-				keyboardType="numeric"
-				onChangeText={(text) => setDay(text)}
-				value={day}
-			/>
-			<Text>Месяц:</Text>
-			<TextInput
-				style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-				placeholder="MM"
-				keyboardType="numeric"
-				onChangeText={(text) => setMonth(text)}
-				value={month}
-			/>
-			<Text>Год:</Text>
-			<TextInput
-				style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-				placeholder="YYYY"
-				keyboardType="numeric"
-				onChangeText={(text) => setYear(text)}
-				value={year}
-			/>
-			<Text>Тип нумерологии:</Text>
-			<Picker
-				selectedValue={numerologyType}
-				style={{ height: 50, width: 150 }}
-				onValueChange={(itemValue) => setNumerologyType(itemValue)}
-			>
-				<Picker.Item
-					label="Пифагорейская"
-					value="pythagorean"
-				/>
-				<Picker.Item
-					label="Каббалистическая"
-					value="kabbalah"
-				/>
-				{/* Другие варианты */}
-			</Picker>
-			<Button
-				title="Рассчитать"
-				onPress={handleSubmit}
-			/>
+		<View style={styles.container}>
+			<View style={styles.containerRow}>
+				<Text style={styles.label}>Тип нумерологии:</Text>
+				<Picker
+					selectedValue={numerologyType}
+					style={styles.picker}
+					onValueChange={(itemValue) => setNumerologyType(itemValue)}
+				>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Пифагорейская"
+						value="pythagorean"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Каббалистическая"
+						value="kabbalah"
+					/>
+				</Picker>
+			</View>
 
-			{matrix ? (
-				<View>
-					<Text>
-						{matrix.ones} - Характер: {interpretCharacter(matrix.ones)}
-					</Text>
-					<Text>
-						{matrix.twos} - Энергия: {interpretEnergy(matrix.twos)}
-					</Text>
-					<Text>
-						{matrix.threes} - Интерес: {interpretInterest(matrix.threes)}
-					</Text>
-					<Text>
-						{matrix.fours} - Здоровье: {interpretHealth(matrix.fours)}
-					</Text>
-					<Text>
-						{matrix.fives} - Логика: {interpretLogic(matrix.fives)}
-					</Text>
-					<Text>
-						{matrix.sixes} - Труд: {interpretLabor(matrix.sixes)}
-					</Text>
-					<Text>
-						{matrix.sevens} - Удача: {interpretLuck(matrix.sevens)}
-					</Text>
-					<Text>
-						{matrix.eights} - Долг: {interpretDuty(matrix.eights)}
-					</Text>
-					<Text>
-						{matrix.nines} - Память: {interpretMemory(matrix.nines)}
-					</Text>
-					<Text>Максимальное значение в матрице: {matrix.maxValue}</Text>
-				</View>
+			{numerologyType === "kabbalah" ? (
+				<KabbalaComponent />
 			) : (
-				<Text>{textAbaut}</Text>
+				<PifagorComponent />
 			)}
-			{error && <Text>{error}</Text>}
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		padding: 13,
+		flex: 1,
+		backgroundColor: "#F5F5F5",
+	},
+	containerRow: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		alignItems: "center",
+		height: 50,
+	},
+	label: {
+		fontSize: 18,
+		fontWeight: "600",
+		fontFamily: "Jura-Medium",
+		color: "#333",
+	},
+	picker: {
+		width: 200,
+	},
+	pickerItem: {
+		fontFamily: "Comfortaa-Regular",
+	},
+});
