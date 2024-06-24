@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import {
 	View,
 	Text,
-	TextInput,
-	Button,
+	TouchableOpacity,
 	ScrollView,
 	StyleSheet,
 } from "react-native";
+
+import { Picker } from "@react-native-picker/picker";
+
 import {
 	interpretCharacter,
 	interpretEnergy,
@@ -33,76 +35,126 @@ export default function PifagorComponent() {
 			setError("Не все поля заполнены. Не хватает исходных данных");
 			return;
 		}
-
 		const matrix = calculateMatrix(day, month, year);
 		setError("");
 		setMatrix(matrix);
 	};
+
+	const days = Array.from({ length: 31 }, (_, i) => i + 1);
+	const months = Array.from({ length: 12 }, (_, i) => i + 1);
+	const currentYear = new Date().getFullYear();
+	const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
 			<View>
-				<Text>День:</Text>
-				<TextInput
-					style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-					placeholder="DD"
-					keyboardType="numeric"
-					onChangeText={(text) => setDay(text)}
-					value={day}
-				/>
-				<Text>Месяц:</Text>
-				<TextInput
-					style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-					placeholder="MM"
-					keyboardType="numeric"
-					onChangeText={(text) => setMonth(text)}
-					value={month}
-				/>
-				<Text>Год:</Text>
-				<TextInput
-					style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-					placeholder="YYYY"
-					keyboardType="numeric"
-					onChangeText={(text) => setYear(text)}
-					value={year}
-				/>
-				{error && <Text>{error}</Text>}
-				<Button
-					title="Рассчитать"
+				<View style={styles.container}>
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>День:</Text>
+						<Picker
+							selectedValue={day}
+							style={styles.picker}
+							onValueChange={(itemValue) => setDay(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{days.map((d) => (
+								<Picker.Item
+									key={d}
+									label={d.toString()}
+									value={d.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>Месяц:</Text>
+						<Picker
+							selectedValue={month}
+							style={styles.picker}
+							onValueChange={(itemValue) => setMonth(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{months.map((m) => (
+								<Picker.Item
+									key={m}
+									label={m.toString()}
+									value={m.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>Год:</Text>
+						<Picker
+							selectedValue={year}
+							style={styles.picker}
+							onValueChange={(itemValue) => setYear(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{years.map((y) => (
+								<Picker.Item
+									key={y}
+									label={y.toString()}
+									value={y.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+				</View>
+				{error && <Text style={styles.error}>{error}</Text>}
+				<TouchableOpacity
+					style={styles.button}
 					onPress={handleSubmit}
-				/>
+				>
+					<Text style={styles.buttonText}>Рассчитать</Text>
+				</TouchableOpacity>
 				{matrix ? (
-					<View>
-						<Text>
-							{matrix.ones} - Характер: {interpretCharacter(matrix.ones)}
+					<View style={styles.resultContainer}>
+						<Text style={styles.resultText}>{matrix.ones} - Характер:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretCharacter(matrix.ones)}
 						</Text>
-						<Text>
-							{matrix.twos} - Энергия: {interpretEnergy(matrix.twos)}
+
+						<Text style={styles.resultText}>{matrix.twos} - Энергия:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretEnergy(matrix.twos)}
 						</Text>
-						<Text>
-							{matrix.threes} - Интерес: {interpretInterest(matrix.threes)}
+						<Text style={styles.resultText}>{matrix.threes} - Интерес:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretInterest(matrix.threes)}
 						</Text>
-						<Text>
-							{matrix.fours} - Здоровье: {interpretHealth(matrix.fours)}
+						<Text style={styles.resultText}>{matrix.fours} - Здоровье:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretHealth(matrix.fours)}
 						</Text>
-						<Text>
-							{matrix.fives} - Логика: {interpretLogic(matrix.fives)}
+						<Text style={styles.resultText}>{matrix.fives} - Логика:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLogic(matrix.fives)}
 						</Text>
-						<Text>
-							{matrix.sixes} - Труд: {interpretLabor(matrix.sixes)}
+						<Text style={styles.resultText}>{matrix.sixes} - Труд:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLabor(matrix.sixes)}
 						</Text>
-						<Text>
-							{matrix.sevens} - Удача: {interpretLuck(matrix.sevens)}
+						<Text style={styles.resultText}>{matrix.sevens} - Удача:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLuck(matrix.sevens)}
 						</Text>
-						<Text>
-							{matrix.eights} - Долг: {interpretDuty(matrix.eights)}
+						<Text style={styles.resultText}>{matrix.eights} - Долг:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretDuty(matrix.eights)}
 						</Text>
-						<Text>
-							{matrix.nines} - Память: {interpretMemory(matrix.nines)}
+						<Text style={styles.resultText}>{matrix.nines} - Память:</Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretMemory(matrix.nines)}
 						</Text>
-						<Text>Максимальное значение в матрице: {matrix.maxValue}</Text>
+						<Text style={styles.resultText}>
+							Максимальное значение в матрице: {matrix.maxValue}
+						</Text>
+						<Text style={styles.resultTextAbout}></Text>
 					</View>
 				) : (
-					<Text>{textAbaut}</Text>
+					<Text style={styles.resultText}>{textAbaut}</Text>
 				)}
 			</View>
 		</ScrollView>
@@ -113,5 +165,76 @@ const styles = StyleSheet.create({
 		flexGrow: 1,
 		padding: 6,
 		backgroundColor: "#F5F5F5",
+	},
+	containerRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		height: 60,
+	},
+	button: {
+		backgroundColor: "#007AFF",
+		paddingVertical: 10,
+		paddingHorizontal: 32,
+		borderRadius: 8,
+		alignItems: "center",
+		marginBottom: 16,
+	},
+	buttonText: {
+		color: "#FFFFFF",
+		fontSize: 20,
+		fontWeight: "600",
+		fontFamily: "Jura-Medium",
+	},
+	container: {
+		padding: 20,
+		backgroundColor: "#fff",
+		borderRadius: 10,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 8,
+		elevation: 5,
+		marginBottom: 20,
+	},
+	picker: {
+		height: 30,
+		width: 200,
+		alignSelf: "center",
+		backgroundColor: "#f5f5f5",
+	},
+	label: {
+		fontSize: 18,
+		fontWeight: "600",
+		fontFamily: "Jura-Medium",
+		marginBottom: 8,
+		color: "#333",
+	},
+	error: {
+		color: "red",
+		marginBottom: 16,
+	},
+	resultContainer: {
+		padding: 20,
+		backgroundColor: "#FFFFFF",
+		borderRadius: 8,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 8,
+		elevation: 1,
+	},
+	resultText: {
+		fontSize: 16,
+		fontWeight: "600",
+		fontFamily: "Comfortaa-Regular",
+
+		marginTop: 16,
+		color: "#333",
+	},
+	resultTextAbout: {
+		fontSize: 17,
+		fontFamily: "Jura-Medium",
+		color: "#333",
 	},
 });
