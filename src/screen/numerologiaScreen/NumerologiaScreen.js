@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
+import VedaComponent from "./vedicheskaia/VedaComponent";
 import KabbalaComponent from "./kabbala/KabbalaComponent";
 import PifagorComponent from "./pifagor/PifagorComponent";
 export default function NumerologiaScreen() {
@@ -26,14 +27,16 @@ export default function NumerologiaScreen() {
 						label="Каббалистическая"
 						value="kabbalah"
 					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Ведическая"
+						value="veda"
+					/>
 				</Picker>
 			</View>
-
-			{numerologyType === "kabbalah" ? (
-				<KabbalaComponent />
-			) : (
-				<PifagorComponent />
-			)}
+			{numerologyType === "kabbalah" && <KabbalaComponent />}
+			{numerologyType === "veda" && <VedaComponent />}
+			{numerologyType === "pythagorean" && <PifagorComponent />}
 		</View>
 	);
 }

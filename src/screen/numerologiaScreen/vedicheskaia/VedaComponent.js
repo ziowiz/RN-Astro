@@ -9,21 +9,10 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
-import {
-	interpretCharacter,
-	interpretEnergy,
-	interpretInterest,
-	interpretHealth,
-	interpretLogic,
-	interpretLabor,
-	interpretLuck,
-	interpretDuty,
-	textAbaut,
-	interpretMemory,
-} from "./dataPifagora";
-import calculateMatrix from "./formulasPifagor";
+import calculateMatrix from "./formulasVeda";
+import { about } from "./formulasVeda";
 
-export default function PifagorComponent() {
+export default function VedaComponent() {
 	const [error, setError] = useState("");
 	const [day, setDay] = useState("1");
 	const [month, setMonth] = useState("1");
@@ -54,7 +43,7 @@ export default function PifagorComponent() {
 							selectedValue={day}
 							style={styles.picker}
 							onValueChange={(itemValue) => setDay(itemValue)}
-							mode="dropdown" // or "dialog"
+							mode="dropdown" // or "dialog" dropdown
 						>
 							{days.map((d) => (
 								<Picker.Item
@@ -109,57 +98,45 @@ export default function PifagorComponent() {
 				>
 					<Text style={styles.buttonText}>Рассчитать</Text>
 				</TouchableOpacity>
-				{matrix ? (
-					<View style={styles.resultContainer}>
-						<Text style={styles.resultText}>{matrix.ones} - Характер:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretCharacter(matrix.ones)}
-						</Text>
 
-						<Text style={styles.resultText}>{matrix.twos} - Энергия:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretEnergy(matrix.twos)}
+				{matrix && (
+					<View style={styles.resultContainer}>
+						<Text style={styles.resultText}>
+							Эта цифра покажет первые 40% нашего внутреннего мира:{" "}
 						</Text>
-						<Text style={styles.resultText}>{matrix.threes} - Интерес:</Text>
 						<Text style={styles.resultTextAbout}>
-							{interpretInterest(matrix.threes)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.fours} - Здоровье:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretHealth(matrix.fours)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.fives} - Логика:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretLogic(matrix.fives)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.sixes} - Труд:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretLabor(matrix.sixes)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.sevens} - Удача:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretLuck(matrix.sevens)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.eights} - Долг:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretDuty(matrix.eights)}
-						</Text>
-						<Text style={styles.resultText}>{matrix.nines} - Память:</Text>
-						<Text style={styles.resultTextAbout}>
-							{interpretMemory(matrix.nines)}
+							{matrix.day}({matrix.descriptions.day})
 						</Text>
 						<Text style={styles.resultText}>
-							Максимальное значение в матрице: {matrix.maxValue}
+							Вторая цифра отражает 10% нашего «я»:{" "}
 						</Text>
-						<Text style={styles.resultTextAbout}></Text>
+						<Text style={styles.resultTextAbout}>
+							{matrix.month} ({matrix.descriptions.month})
+						</Text>
+						<Text style={styles.resultText}>
+							Год рождения покажет еще 10% будущей характеристики:{" "}
+						</Text>
+						<Text style={styles.resultTextAbout}>
+							{matrix.year}({matrix.descriptions.year})
+						</Text>
+						<Text style={styles.resultText}>
+							Общая цифра даст нам недостающие 40% образа внутреннего Я:{" "}
+						</Text>
+						<Text style={styles.resultTextAbout}>
+							{matrix.total} ({matrix.descriptions.total})
+						</Text>
 					</View>
-				) : (
-					<Text style={styles.resultTextAbout}>{textAbaut}</Text>
+				)}
+				{!matrix && (
+					<View>
+						<Text style={styles.resultTextAbout}>{about}</Text>
+					</View>
 				)}
 			</View>
 		</ScrollView>
 	);
 }
+
 const styles = StyleSheet.create({
 	scrollContainer: {
 		flexGrow: 1,
@@ -228,8 +205,8 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "600",
 		fontFamily: "Comfortaa-Regular",
-
-		marginTop: 16,
+		marginTop: 26,
+		marginBottom: 16,
 		color: "#333",
 	},
 	resultTextAbout: {
