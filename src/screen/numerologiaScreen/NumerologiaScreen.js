@@ -5,6 +5,8 @@ import { Picker } from "@react-native-picker/picker";
 import VedaComponent from "./vedicheskaia/VedaComponent";
 import KabbalaComponent from "./kabbala/KabbalaComponent";
 import PifagorComponent from "./pifagor/PifagorComponent";
+import ChinaComponent from "./china/ChinaComponent";
+
 export default function NumerologiaScreen() {
 	const [numerologyType, setNumerologyType] = useState("pythagorean");
 
@@ -32,11 +34,17 @@ export default function NumerologiaScreen() {
 						label="Ведическая"
 						value="veda"
 					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="У-Син"
+						value="china"
+					/>
 				</Picker>
 			</View>
 			{numerologyType === "kabbalah" && <KabbalaComponent />}
 			{numerologyType === "veda" && <VedaComponent />}
 			{numerologyType === "pythagorean" && <PifagorComponent />}
+			{numerologyType === "china" && <ChinaComponent />}
 		</View>
 	);
 }
