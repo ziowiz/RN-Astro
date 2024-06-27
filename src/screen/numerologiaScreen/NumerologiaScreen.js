@@ -6,7 +6,10 @@ import VedaComponent from "./vedicheskaia/VedaComponent";
 import KabbalaComponent from "./kabbala/KabbalaComponent";
 import PifagorComponent from "./pifagor/PifagorComponent";
 import ChinaComponent from "./china/ChinaComponent";
-
+import TaroNumerComponent from "./taroNumerologia/taroNumerComponent";
+import AveistComponent from "./aveist/AveistComponent";
+import SlovaneComponent from "./slovane/SlovaneComponent";
+import SovmestComponent from "./sovmestimost/SovmestComponent";
 export default function NumerologiaScreen() {
 	const [numerologyType, setNumerologyType] = useState("pythagorean");
 
@@ -21,23 +24,43 @@ export default function NumerologiaScreen() {
 				>
 					<Picker.Item
 						style={styles.pickerItem}
-						label="Пифагорейская"
+						label="Пифагорская нумерология"
 						value="pythagorean"
 					/>
 					<Picker.Item
 						style={styles.pickerItem}
-						label="Каббалистическая"
+						label="Каббалистическая нумерология"
 						value="kabbalah"
 					/>
 					<Picker.Item
 						style={styles.pickerItem}
-						label="Ведическая"
+						label="Ведическая нумерология"
 						value="veda"
 					/>
 					<Picker.Item
 						style={styles.pickerItem}
-						label="У-Син"
+						label="У-Син нумерология"
 						value="china"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Таро нумерология"
+						value="TaroNumerologia"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Авестийская нумерология"
+						value="aveist"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Словянская нумерология"
+						value="slovan"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Совместимость характеров"
+						value="sovmestimost"
 					/>
 				</Picker>
 			</View>
@@ -45,6 +68,10 @@ export default function NumerologiaScreen() {
 			{numerologyType === "veda" && <VedaComponent />}
 			{numerologyType === "pythagorean" && <PifagorComponent />}
 			{numerologyType === "china" && <ChinaComponent />}
+			{numerologyType === "TaroNumerologia" && <TaroNumerComponent />}
+			{numerologyType === "aveist" && <AveistComponent />}
+			{numerologyType === "slovan" && <SlovaneComponent />}
+			{numerologyType === "sovmestimost" && <SovmestComponent />}
 		</View>
 	);
 }

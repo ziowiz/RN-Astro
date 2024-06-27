@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
 		elevation: 1,
 	},
 	resultText: {
-		fontSize: 17,
+		fontSize: 19,
 		color: "#333",
 		fontFamily: "Jura-Medium",
 	},

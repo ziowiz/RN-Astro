@@ -7,47 +7,93 @@ import {
 	StyleSheet,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { calculateWUxing, about } from "./formulasChina";
 
-export default function ChinaComponent() {
+import {
+	interpretCharacter,
+	interpretEnergy,
+	interpretInterest,
+	interpretHealth,
+	interpretLogic,
+	interpretLabor,
+	interpretLuck,
+	interpretDuty,
+	interpretMemory,
+	textAbaut,
+} from "./dataSlovane";
+import calculateMatrix from "./formulasSlovane";
+
+export default function SlovaneComponent() {
 	const [error, setError] = useState("");
 	const [day, setDay] = useState("1");
+	const [minute, setMinute] = useState("1");
+	const [hour, setHour] = useState("1");
 	const [month, setMonth] = useState("1");
 	const [year, setYear] = useState("2024");
-	const [hour, setHour] = useState("0");
-	const [matrix, setMatrix] = useState(null);
+	const [matrix, setMatrix] = useState([]);
 
 	const handleSubmit = () => {
-		if (!day || !month || !year || !hour) {
-			setError("Не все поля заполнены. Не хватает исходных данных");
-			return;
+		try {
+			const matrixResult = calculateMatrix(day, month, year, hour, minute);
+			setError("");
+			setMatrix(matrixResult);
+		} catch (e) {
+			setError("Ошибка в расчете матрицы");
+			console.error(e);
 		}
-		const matrix = calculateWUxing(day, month, year, hour);
-		setError("");
-		setMatrix(matrix);
 	};
 
+	const minutes = Array.from({ length: 60 }, (_, i) => i + 1);
+	const hours = Array.from({ length: 24 }, (_, i) => i + 1);
 	const days = Array.from({ length: 31 }, (_, i) => i + 1);
 	const months = Array.from({ length: 12 }, (_, i) => i + 1);
 	const currentYear = new Date().getFullYear();
 	const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-	const hours = Array.from({ length: 24 }, (_, i) => {
-		const startHour = String(i).padStart(2, "0") + ":00";
-		const endHour = String((i + 1) % 24).padStart(2, "0") + ":00";
-		return `${startHour}-${endHour}`;
-	});
 
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
 			<View>
 				<View style={styles.container}>
 					<View style={styles.containerRow}>
+						<Text style={styles.label}>Час:</Text>
+						<Picker
+							selectedValue={hour}
+							style={styles.picker}
+							onValueChange={(itemValue) => setHour(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{hours.map((h) => (
+								<Picker.Item
+									key={h}
+									label={h.toString()}
+									value={h.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>Минута:</Text>
+						<Picker
+							selectedValue={minute}
+							style={styles.picker}
+							onValueChange={(itemValue) => setMinute(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{minutes.map((m) => (
+								<Picker.Item
+									key={m}
+									label={m.toString()}
+									value={m.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+					<View style={styles.containerRow}>
 						<Text style={styles.label}>День:</Text>
 						<Picker
 							selectedValue={day}
 							style={styles.picker}
 							onValueChange={(itemValue) => setDay(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{days.map((d) => (
 								<Picker.Item
@@ -58,14 +104,13 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
 					<View style={styles.containerRow}>
 						<Text style={styles.label}>Месяц:</Text>
 						<Picker
 							selectedValue={month}
 							style={styles.picker}
 							onValueChange={(itemValue) => setMonth(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{months.map((m) => (
 								<Picker.Item
@@ -76,38 +121,19 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
 					<View style={styles.containerRow}>
 						<Text style={styles.label}>Год:</Text>
 						<Picker
 							selectedValue={year}
 							style={styles.picker}
 							onValueChange={(itemValue) => setYear(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{years.map((y) => (
 								<Picker.Item
 									key={y}
 									label={y.toString()}
 									value={y.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
-
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Время рождения:</Text>
-						<Picker
-							selectedValue={hour}
-							style={styles.picker}
-							onValueChange={(itemValue) => setHour(itemValue)}
-							mode="dropdown"
-						>
-							{hours.map((h) => (
-								<Picker.Item
-									key={h}
-									label={h.toString()}
-									value={h.toString()}
 								/>
 							))}
 						</Picker>
@@ -120,20 +146,47 @@ export default function ChinaComponent() {
 				>
 					<Text style={styles.buttonText}>Рассчитать</Text>
 				</TouchableOpacity>
-
-				{matrix && (
+				{matrix.length ? (
 					<View style={styles.resultContainer}>
-						<Text style={styles.resultText}>Элемент: {matrix.element}</Text>
+						<Text style={styles.resultText}>Число характера {matrix[0]}: </Text>
 						<Text style={styles.resultTextAbout}>
-							Описание: {matrix.description}
+							{interpretCharacter(matrix[0])}
 						</Text>
-						<Text style={styles.resultTextAbout}> {matrix.traits}</Text>
+						<Text style={styles.resultText}>Число энергии {matrix[1]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretEnergy(matrix[1])}
+						</Text>
+						<Text style={styles.resultText}>Число интереса {matrix[2]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretInterest(matrix[2])}
+						</Text>
+						<Text style={styles.resultText}>Число здоровья {matrix[3]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretHealth(matrix[3])}
+						</Text>
+						<Text style={styles.resultText}>Число логики {matrix[4]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLogic(matrix[4])}
+						</Text>
+						<Text style={styles.resultText}>Число труда {matrix[5]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLabor(matrix[5])}
+						</Text>
+						<Text style={styles.resultText}>Число удачи {matrix[6]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretLuck(matrix[6])}
+						</Text>
+						<Text style={styles.resultText}>Число долга {matrix[7]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretDuty(matrix[7])}
+						</Text>
+						<Text style={styles.resultText}>Число памяти {matrix[8]}: </Text>
+						<Text style={styles.resultTextAbout}>
+							{interpretMemory(matrix[8])}
+						</Text>
 					</View>
-				)}
-				{!matrix && (
-					<View>
-						<Text style={styles.resultTextAbout}>{about}</Text>
-					</View>
+				) : (
+					<Text style={styles.resultTextAbout}>{textAbaut}</Text>
 				)}
 			</View>
 		</ScrollView>
@@ -178,6 +231,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	picker: {
+		height: 30,
 		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
@@ -193,7 +247,7 @@ const styles = StyleSheet.create({
 		color: "red",
 		marginBottom: 16,
 	},
-	resultContainer: {
+	matrixContainer: {
 		padding: 20,
 		backgroundColor: "#FFFFFF",
 		borderRadius: 8,
@@ -203,12 +257,13 @@ const styles = StyleSheet.create({
 		shadowRadius: 8,
 		elevation: 1,
 	},
+
 	resultText: {
 		fontSize: 17,
 		fontWeight: "600",
 		fontFamily: "Comfortaa-Regular",
-		marginTop: 26,
-		marginBottom: 16,
+
+		marginTop: 16,
 		color: "#333",
 	},
 	resultTextAbout: {

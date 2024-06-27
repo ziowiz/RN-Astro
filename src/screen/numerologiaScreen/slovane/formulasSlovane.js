@@ -1,5 +1,7 @@
-const calculateMatrix = (day, month, year) => {
-	const dateNumbers = `${day}${month}${year}`.split("").map(Number);
+const calculateMatrix = (day, month, year, hour, minute) => {
+	const dateNumbers = `${day}${month}${year}${hour}${minute}`
+		.split("")
+		.map(Number);
 	console.log("dateNumbers - " + dateNumbers);
 
 	// Сложение всех цифр для первого дополнительного числа
@@ -31,7 +33,7 @@ const calculateMatrix = (day, month, year) => {
 		.reduce((acc, num) => acc + num, 0);
 	console.log("fourthSum - " + fourthSum);
 
-	// Создание матрицы
+	// Создание матрицы из девяти цифр
 	let allNumbers = [
 		...dateNumbers,
 		...firstSum.toString().split("").map(Number),
@@ -45,22 +47,11 @@ const calculateMatrix = (day, month, year) => {
 	allNumbers = allNumbers.filter((num) => num !== 0);
 	console.log("filtered allNumbers - " + allNumbers);
 
-	const matrix = {
-		ones: allNumbers.filter((num) => num === 1).length,
-		twos: allNumbers.filter((num) => num === 2).length,
-		threes: allNumbers.filter((num) => num === 3).length,
-		fours: allNumbers.filter((num) => num === 4).length,
-		fives: allNumbers.filter((num) => num === 5).length,
-		sixes: allNumbers.filter((num) => num === 6).length,
-		sevens: allNumbers.filter((num) => num === 7).length,
-		eights: allNumbers.filter((num) => num === 8).length,
-		nines: allNumbers.filter((num) => num === 9).length,
-	};
+	// Возвращаем девять цифр
+	const matrix = allNumbers.slice(0, 9);
+	console.log("matrix - " + matrix);
 
-	const maxValue = Math.max(...Object.values(matrix));
-
-	const matrixResponse = { ...matrix, maxValue };
-	return matrixResponse;
+	return matrix;
 };
 
 module.exports = calculateMatrix;

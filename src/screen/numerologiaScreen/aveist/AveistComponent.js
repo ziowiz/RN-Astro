@@ -6,23 +6,25 @@ import {
 	ScrollView,
 	StyleSheet,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { calculateWUxing, about } from "./formulasChina";
 
-export default function ChinaComponent() {
+import { Picker } from "@react-native-picker/picker";
+
+import calculateAvesticNumber from "./formulasAveist";
+import { about } from "./formulasAveist";
+
+export default function AveistComponent() {
 	const [error, setError] = useState("");
 	const [day, setDay] = useState("1");
 	const [month, setMonth] = useState("1");
 	const [year, setYear] = useState("2024");
-	const [hour, setHour] = useState("0");
 	const [matrix, setMatrix] = useState(null);
 
 	const handleSubmit = () => {
-		if (!day || !month || !year || !hour) {
+		if (!day || !month || !year) {
 			setError("Не все поля заполнены. Не хватает исходных данных");
 			return;
 		}
-		const matrix = calculateWUxing(day, month, year, hour);
+		const matrix = calculateAvesticNumber(day, month, year);
 		setError("");
 		setMatrix(matrix);
 	};
@@ -31,12 +33,6 @@ export default function ChinaComponent() {
 	const months = Array.from({ length: 12 }, (_, i) => i + 1);
 	const currentYear = new Date().getFullYear();
 	const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-	const hours = Array.from({ length: 24 }, (_, i) => {
-		const startHour = String(i).padStart(2, "0") + ":00";
-		const endHour = String((i + 1) % 24).padStart(2, "0") + ":00";
-		return `${startHour}-${endHour}`;
-	});
-
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
 			<View>
@@ -47,7 +43,7 @@ export default function ChinaComponent() {
 							selectedValue={day}
 							style={styles.picker}
 							onValueChange={(itemValue) => setDay(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog" dropdown
 						>
 							{days.map((d) => (
 								<Picker.Item
@@ -65,7 +61,7 @@ export default function ChinaComponent() {
 							selectedValue={month}
 							style={styles.picker}
 							onValueChange={(itemValue) => setMonth(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{months.map((m) => (
 								<Picker.Item
@@ -83,31 +79,13 @@ export default function ChinaComponent() {
 							selectedValue={year}
 							style={styles.picker}
 							onValueChange={(itemValue) => setYear(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{years.map((y) => (
 								<Picker.Item
 									key={y}
 									label={y.toString()}
 									value={y.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
-
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Время рождения:</Text>
-						<Picker
-							selectedValue={hour}
-							style={styles.picker}
-							onValueChange={(itemValue) => setHour(itemValue)}
-							mode="dropdown"
-						>
-							{hours.map((h) => (
-								<Picker.Item
-									key={h}
-									label={h.toString()}
-									value={h.toString()}
 								/>
 							))}
 						</Picker>
@@ -123,11 +101,11 @@ export default function ChinaComponent() {
 
 				{matrix && (
 					<View style={styles.resultContainer}>
-						<Text style={styles.resultText}>Элемент: {matrix.element}</Text>
-						<Text style={styles.resultTextAbout}>
-							Описание: {matrix.description}
+						<Text style={styles.resultText}>
+							Ваше авестийское число: {matrix.number}
 						</Text>
-						<Text style={styles.resultTextAbout}> {matrix.traits}</Text>
+						<Text style={styles.resultTextAbout}>{matrix.cycle}</Text>
+						<Text style={styles.resultTextAbout}>{matrix.planet}</Text>
 					</View>
 				)}
 				{!matrix && (
@@ -178,6 +156,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	picker: {
+		height: 30,
 		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
@@ -213,6 +192,7 @@ const styles = StyleSheet.create({
 	},
 	resultTextAbout: {
 		fontSize: 19,
+		marginBottom: 20,
 		fontFamily: "Jura-Medium",
 		color: "#333",
 	},

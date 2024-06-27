@@ -7,35 +7,26 @@ import {
 	StyleSheet,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { calculateWUxing, about } from "./formulasChina";
+import { calculateTaroValue, about } from "./formulasTaroNum";
 
-export default function ChinaComponent() {
+export default function TaroNumerComponent() {
 	const [error, setError] = useState("");
 	const [day, setDay] = useState("1");
-	const [month, setMonth] = useState("1");
-	const [year, setYear] = useState("2024");
-	const [hour, setHour] = useState("0");
+
 	const [matrix, setMatrix] = useState(null);
 
 	const handleSubmit = () => {
-		if (!day || !month || !year || !hour) {
-			setError("Не все поля заполнены. Не хватает исходных данных");
-			return;
+		try {
+			const matrix = calculateTaroValue(day);
+			setMatrix(matrix);
+			setError("");
+		} catch (e) {
+			setError("Произошла ошибка при расчёте. Попробуйте снова.");
+			setMatrix(null);
 		}
-		const matrix = calculateWUxing(day, month, year, hour);
-		setError("");
-		setMatrix(matrix);
 	};
 
 	const days = Array.from({ length: 31 }, (_, i) => i + 1);
-	const months = Array.from({ length: 12 }, (_, i) => i + 1);
-	const currentYear = new Date().getFullYear();
-	const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-	const hours = Array.from({ length: 24 }, (_, i) => {
-		const startHour = String(i).padStart(2, "0") + ":00";
-		const endHour = String((i + 1) % 24).padStart(2, "0") + ":00";
-		return `${startHour}-${endHour}`;
-	});
 
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -58,60 +49,6 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Месяц:</Text>
-						<Picker
-							selectedValue={month}
-							style={styles.picker}
-							onValueChange={(itemValue) => setMonth(itemValue)}
-							mode="dropdown"
-						>
-							{months.map((m) => (
-								<Picker.Item
-									key={m}
-									label={m.toString()}
-									value={m.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
-
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Год:</Text>
-						<Picker
-							selectedValue={year}
-							style={styles.picker}
-							onValueChange={(itemValue) => setYear(itemValue)}
-							mode="dropdown"
-						>
-							{years.map((y) => (
-								<Picker.Item
-									key={y}
-									label={y.toString()}
-									value={y.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
-
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Время рождения:</Text>
-						<Picker
-							selectedValue={hour}
-							style={styles.picker}
-							onValueChange={(itemValue) => setHour(itemValue)}
-							mode="dropdown"
-						>
-							{hours.map((h) => (
-								<Picker.Item
-									key={h}
-									label={h.toString()}
-									value={h.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
 				</View>
 				{error && <Text style={styles.error}>{error}</Text>}
 				<TouchableOpacity
@@ -123,11 +60,8 @@ export default function ChinaComponent() {
 
 				{matrix && (
 					<View style={styles.resultContainer}>
-						<Text style={styles.resultText}>Элемент: {matrix.element}</Text>
-						<Text style={styles.resultTextAbout}>
-							Описание: {matrix.description}
-						</Text>
-						<Text style={styles.resultTextAbout}> {matrix.traits}</Text>
+						<Text style={styles.resultText}>Карта: {matrix.element}</Text>
+						<Text style={styles.resultTextAbout}>{matrix.description}</Text>
 					</View>
 				)}
 				{!matrix && (
@@ -178,6 +112,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	picker: {
+		height: 30,
 		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",

@@ -102,28 +102,28 @@ export default function VedaComponent() {
 				{matrix && (
 					<View style={styles.resultContainer}>
 						<Text style={styles.resultText}>
-							Эта цифра покажет первые 40% нашего внутреннего мира:{" "}
+							Эта цифра покажет первые 40% нашего внутреннего мира:
 						</Text>
 						<Text style={styles.resultTextAbout}>
-							{matrix.day}({matrix.descriptions.day})
+							{matrix.day} - {matrix.descriptions.day}
 						</Text>
 						<Text style={styles.resultText}>
-							Вторая цифра отражает 10% нашего «я»:{" "}
+							Вторая цифра отражает 10% нашего «я»:
 						</Text>
 						<Text style={styles.resultTextAbout}>
-							{matrix.month} ({matrix.descriptions.month})
+							{matrix.month} - {matrix.descriptions.month}
 						</Text>
 						<Text style={styles.resultText}>
-							Год рождения покажет еще 10% будущей характеристики:{" "}
+							Год рождения покажет еще 10% будущей характеристики:
 						</Text>
 						<Text style={styles.resultTextAbout}>
-							{matrix.year}({matrix.descriptions.year})
+							{matrix.year} - {matrix.descriptions.year}
 						</Text>
 						<Text style={styles.resultText}>
-							Общая цифра даст нам недостающие 40% образа внутреннего Я:{" "}
+							Общая цифра даст нам недостающие 40% образа внутреннего Я:
 						</Text>
 						<Text style={styles.resultTextAbout}>
-							{matrix.total} ({matrix.descriptions.total})
+							{matrix.total} - {matrix.descriptions.total}
 						</Text>
 					</View>
 				)}
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
 	},
 	picker: {
 		height: 30,
-		width: 200,
+		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
 	},
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 		elevation: 1,
 	},
 	resultText: {
-		fontSize: 16,
+		fontSize: 17,
 		fontWeight: "600",
 		fontFamily: "Comfortaa-Regular",
 		marginTop: 26,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
 		color: "#333",
 	},
 	resultTextAbout: {
-		fontSize: 17,
+		fontSize: 19,
 		fontFamily: "Jura-Medium",
 		color: "#333",
 	},

@@ -7,47 +7,53 @@ import {
 	StyleSheet,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { calculateWUxing, about } from "./formulasChina";
+import { calculateCompatibility, textAbaut } from "./formulasSovmest";
 
-export default function ChinaComponent() {
+export default function SovmestComponent() {
 	const [error, setError] = useState("");
+	const [dayPartner, setDayPartner] = useState("1");
+	const [monthPartner, setMonthPartner] = useState("1");
+	const [yearPartner, setYearPartner] = useState("2024");
 	const [day, setDay] = useState("1");
 	const [month, setMonth] = useState("1");
 	const [year, setYear] = useState("2024");
-	const [hour, setHour] = useState("0");
-	const [matrix, setMatrix] = useState(null);
+	const [matrix, setMatrix] = useState([]);
 
 	const handleSubmit = () => {
-		if (!day || !month || !year || !hour) {
-			setError("Не все поля заполнены. Не хватает исходных данных");
-			return;
+		try {
+			const matrixResult = calculateCompatibility(
+				day,
+				month,
+				year,
+				dayPartner,
+				monthPartner,
+				yearPartner
+			);
+			setError("");
+			setMatrix(matrixResult);
+		} catch (e) {
+			setError("Ошибка в расчете матрицы");
+			console.error(e);
 		}
-		const matrix = calculateWUxing(day, month, year, hour);
-		setError("");
-		setMatrix(matrix);
 	};
 
 	const days = Array.from({ length: 31 }, (_, i) => i + 1);
 	const months = Array.from({ length: 12 }, (_, i) => i + 1);
 	const currentYear = new Date().getFullYear();
 	const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
-	const hours = Array.from({ length: 24 }, (_, i) => {
-		const startHour = String(i).padStart(2, "0") + ":00";
-		const endHour = String((i + 1) % 24).padStart(2, "0") + ":00";
-		return `${startHour}-${endHour}`;
-	});
 
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
 			<View>
 				<View style={styles.container}>
+					<View style={styles.containerRow}></View>
 					<View style={styles.containerRow}>
-						<Text style={styles.label}>День:</Text>
+						<Text style={styles.label}>Ваш день рождения:</Text>
 						<Picker
 							selectedValue={day}
 							style={styles.picker}
 							onValueChange={(itemValue) => setDay(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{days.map((d) => (
 								<Picker.Item
@@ -58,14 +64,13 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
 					<View style={styles.containerRow}>
-						<Text style={styles.label}>Месяц:</Text>
+						<Text style={styles.label}>Ваш месяц рождения:</Text>
 						<Picker
 							selectedValue={month}
 							style={styles.picker}
 							onValueChange={(itemValue) => setMonth(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{months.map((m) => (
 								<Picker.Item
@@ -76,14 +81,13 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
 					<View style={styles.containerRow}>
-						<Text style={styles.label}>Год:</Text>
+						<Text style={styles.label2}>Ваш год рождения:</Text>
 						<Picker
 							selectedValue={year}
 							style={styles.picker}
 							onValueChange={(itemValue) => setYear(itemValue)}
-							mode="dropdown"
+							mode="dropdown" // or "dialog"
 						>
 							{years.map((y) => (
 								<Picker.Item
@@ -94,20 +98,53 @@ export default function ChinaComponent() {
 							))}
 						</Picker>
 					</View>
-
 					<View style={styles.containerRow}>
-						<Text style={styles.label}>Время рождения:</Text>
+						<Text style={styles.label}>День рождения партнера:</Text>
 						<Picker
-							selectedValue={hour}
+							selectedValue={dayPartner}
 							style={styles.picker}
-							onValueChange={(itemValue) => setHour(itemValue)}
-							mode="dropdown"
+							onValueChange={(itemValue) => setDayPartner(itemValue)}
+							mode="dropdown" // or "dialog"
 						>
-							{hours.map((h) => (
+							{days.map((d) => (
 								<Picker.Item
-									key={h}
-									label={h.toString()}
-									value={h.toString()}
+									key={d}
+									label={d.toString()}
+									value={d.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>Месяц рождения партнера:</Text>
+						<Picker
+							selectedValue={monthPartner}
+							style={styles.picker}
+							onValueChange={(itemValue) => setMonthPartner(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{months.map((m) => (
+								<Picker.Item
+									key={m}
+									label={m.toString()}
+									value={m.toString()}
+								/>
+							))}
+						</Picker>
+					</View>
+					<View style={styles.containerRow}>
+						<Text style={styles.label}>Год рождения партнера:</Text>
+						<Picker
+							selectedValue={yearPartner}
+							style={styles.picker}
+							onValueChange={(itemValue) => setYearPartner(itemValue)}
+							mode="dropdown" // or "dialog"
+						>
+							{years.map((y) => (
+								<Picker.Item
+									key={y}
+									label={y.toString()}
+									value={y.toString()}
 								/>
 							))}
 						</Picker>
@@ -120,20 +157,24 @@ export default function ChinaComponent() {
 				>
 					<Text style={styles.buttonText}>Рассчитать</Text>
 				</TouchableOpacity>
-
-				{matrix && (
+				{matrix.compatibility ? (
 					<View style={styles.resultContainer}>
-						<Text style={styles.resultText}>Элемент: {matrix.element}</Text>
-						<Text style={styles.resultTextAbout}>
-							Описание: {matrix.description}
+						<Text style={styles.resultText}>
+							Ваше число:
+							<Text style={styles.resultTextAbout}>
+								{matrix.characteristic1}:
+							</Text>
 						</Text>
-						<Text style={styles.resultTextAbout}> {matrix.traits}</Text>
+						<Text style={styles.resultText}>
+							Число партнера:
+							<Text style={styles.resultTextAbout}>
+								{matrix.characteristic2}:
+							</Text>
+						</Text>
+						<Text style={styles.resultTextAbout}>{matrix.compatibility}</Text>
 					</View>
-				)}
-				{!matrix && (
-					<View>
-						<Text style={styles.resultTextAbout}>{about}</Text>
-					</View>
+				) : (
+					<Text style={styles.resultTextAbout}>{textAbaut}</Text>
 				)}
 			</View>
 		</ScrollView>
@@ -178,6 +219,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	picker: {
+		height: 30,
 		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
@@ -186,14 +228,22 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "600",
 		fontFamily: "Jura-Medium",
-		marginBottom: 8,
+		marginBottom: 5,
+		color: "#333",
+	},
+	label2: {
+		fontSize: 18,
+		fontWeight: "600",
+		fontFamily: "Jura-Medium",
+
+		marginBottom: 12,
 		color: "#333",
 	},
 	error: {
 		color: "red",
 		marginBottom: 16,
 	},
-	resultContainer: {
+	matrixContainer: {
 		padding: 20,
 		backgroundColor: "#FFFFFF",
 		borderRadius: 8,
@@ -203,15 +253,17 @@ const styles = StyleSheet.create({
 		shadowRadius: 8,
 		elevation: 1,
 	},
+
 	resultText: {
 		fontSize: 17,
 		fontWeight: "600",
 		fontFamily: "Comfortaa-Regular",
-		marginTop: 26,
-		marginBottom: 16,
+
+		marginTop: 16,
 		color: "#333",
 	},
 	resultTextAbout: {
+		marginTop: 20,
 		fontSize: 19,
 		fontFamily: "Jura-Medium",
 		color: "#333",

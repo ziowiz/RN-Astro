@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
 	},
 	picker: {
 		height: 30,
-		width: 200,
+		width: 150,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
 	},
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
 		elevation: 1,
 	},
 	resultText: {
-		fontSize: 16,
+		fontSize: 17,
 		fontWeight: "600",
 		fontFamily: "Comfortaa-Regular",
 
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
 		color: "#333",
 	},
 	resultTextAbout: {
-		fontSize: 17,
+		fontSize: 19,
 		fontFamily: "Jura-Medium",
 		color: "#333",
 	},
