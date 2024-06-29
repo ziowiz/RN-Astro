@@ -51,41 +51,43 @@ export default function SlovaneComponent() {
 
 	return (
 		<ScrollView contentContainerStyle={styles.scrollContainer}>
-			<View>
-				<View style={styles.container}>
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Час:</Text>
-						<Picker
-							selectedValue={hour}
-							style={styles.picker}
-							onValueChange={(itemValue) => setHour(itemValue)}
-							mode="dropdown" // or "dialog"
-						>
-							{hours.map((h) => (
-								<Picker.Item
-									key={h}
-									label={h.toString()}
-									value={h.toString()}
-								/>
-							))}
-						</Picker>
-					</View>
-					<View style={styles.containerRow}>
-						<Text style={styles.label}>Минута:</Text>
-						<Picker
-							selectedValue={minute}
-							style={styles.picker}
-							onValueChange={(itemValue) => setMinute(itemValue)}
-							mode="dropdown" // or "dialog"
-						>
-							{minutes.map((m) => (
-								<Picker.Item
-									key={m}
-									label={m.toString()}
-									value={m.toString()}
-								/>
-							))}
-						</Picker>
+			<View style={styles.container}>
+				<View style={styles.containerRow}>
+					<View style={styles.containerRow2}>
+						<Text style={styles.label}>Время:</Text>
+						<View style={styles.containerRow3}>
+							<Picker
+								selectedValue={hour}
+								style={styles.picker2}
+								onValueChange={(itemValue) => setHour(itemValue)}
+								mode="dialog"
+							>
+								{hours.map((h) => (
+									<Picker.Item
+										key={h}
+										label={h.toString()}
+										value={h.toString()}
+									/>
+								))}
+							</Picker>
+							{/* </View>
+					<View style={styles.containerRow}> */}
+
+							<Picker
+								selectedValue={minute}
+								style={styles.picker2}
+								onValueChange={(itemValue) => setMinute(itemValue)}
+								mode="dialog" // or "dialog"
+							>
+								{minutes.map((m) => (
+									<Picker.Item
+										key={m}
+										label={m.toString()}
+										value={m.toString()}
+									/>
+								))}
+							</Picker>
+						</View>
 					</View>
 					<View style={styles.containerRow}>
 						<Text style={styles.label}>День:</Text>
@@ -192,7 +194,6 @@ export default function SlovaneComponent() {
 		</ScrollView>
 	);
 }
-
 const styles = StyleSheet.create({
 	scrollContainer: {
 		flexGrow: 1,
@@ -202,6 +203,18 @@ const styles = StyleSheet.create({
 	containerRow: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		alignItems: "center",
+		height: 60,
+	},
+	containerRow2: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		height: 60,
+	},
+	containerRow3: {
+		flexDirection: "row",
+		justifyContent: "",
 		alignItems: "center",
 		height: 60,
 	},
@@ -232,7 +245,14 @@ const styles = StyleSheet.create({
 	},
 	picker: {
 		height: 30,
-		width: 150,
+		width: 230,
+		alignSelf: "center",
+		backgroundColor: "#f5f5f5",
+	},
+	picker2: {
+		height: 30,
+		width: 110,
+		marginLeft: 10,
 		alignSelf: "center",
 		backgroundColor: "#f5f5f5",
 	},
