@@ -1,5 +1,5 @@
 import zodiacSigns from "zodiac-signs";
-import { zodiacInfo } from "./astrologyData";
+import info from "./dataGoroskop";
 
 const zodiac = zodiacSigns("en");
 
@@ -11,12 +11,11 @@ export function calculateAstrology(data) {
 		});
 
 		let userName = zodiacSign.name;
-		let symbol = zodiacSign.symbol;
 
 		console.log("zodiacSign:", userName);
-		console.log("symbol:", symbol);
+		console.log(info(userName));
 
-		return zodiacInfo(userName);
+		return info(userName);
 	} catch (error) {
 		console.error("Ошибка в calculateAstrology:", error);
 		return { error: `Ошибка при расчете: ${error.message}` };

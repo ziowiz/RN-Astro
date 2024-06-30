@@ -2,15 +2,16 @@ import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import ZodiacComponent from "./zodiac/ZodiacComponent";
-
+import GoroscopComponent from "./goroskop/GoroscopComponennt";
+import LoveKharactComponent from "./loveHarakter/LoveKharactComponent";
+import IndianGoroscopComponent from "./indianGoroskop/IndianGoroscopComponent";
 export default function AstrologiaScreen() {
-	const [typeAstro, setTypeAstro] = useState("zodiac");
+	const [typeAstro, setTypeAstro] = useState("indianGoroscope");
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.containerRow}>
 				<Text style={styles.label}>Тип астрологии:</Text>
-
 				<Picker
 					selectedValue={typeAstro}
 					style={styles.picker}
@@ -21,9 +22,27 @@ export default function AstrologiaScreen() {
 						label="Общие данные"
 						value="zodiac"
 					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Европейский гороскоп"
+						value="goroscope"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Отношения "
+						value="loveHaract"
+					/>
+					<Picker.Item
+						style={styles.pickerItem}
+						label="Индийская трактовка"
+						value="indianGoroscope"
+					/>
 				</Picker>
 			</View>
 			{typeAstro === "zodiac" && <ZodiacComponent />}
+			{typeAstro === "goroscope" && <GoroscopComponent />}
+			{typeAstro === "loveHaract" && <LoveKharactComponent />}
+			{typeAstro === "indianGoroscope" && <IndianGoroscopComponent />}
 		</View>
 	);
 }

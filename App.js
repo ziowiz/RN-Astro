@@ -6,7 +6,7 @@ import Application from "./src/Application";
 // Функция для загрузки шрифтов
 const fetchFonts = () => {
 	return Font.loadAsync({
-		"Comfortaa-Regular": require("./src/font/Comfortaa-Regular.ttf"),
+		"Comfortaa-VariableFont_wght": require("./src/font/Comfortaa-VariableFont_wght.ttf"),
 		"Jura-Medium": require("./src/font/Jura-Medium.ttf"),
 	});
 };

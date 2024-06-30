@@ -1,32 +1,70 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	StyleSheet,
+	Dimensions,
+	Text,
+	TouchableOpacity,
+	ImageBackground,
+	View,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StateProvider } from "./context/stateContext";
 import NumerologiaScreen from "./screen/numerologiaScreen/NumerologiaScreen";
 import AstrologiaScreen from "./screen/astrologiaScreen/AstrologiaScreen";
+const { width } = Dimensions.get("window");
+import * as Animatable from "react-native-animatable";
 
 const Stack = createNativeStackNavigator();
-
 function HomeScreen({ navigation }) {
 	return (
-		<View style={styles.container}>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => navigation.navigate("Нумерология")}
-			>
-				<Text style={styles.buttonText}>Нумерология</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => navigation.navigate("Астрология")}
-			>
-				<Text style={styles.buttonText}>Астрология</Text>
-			</TouchableOpacity>
-		</View>
+		<ImageBackground
+			source={require("./img/bgHome.png")}
+			style={styles.background}
+		>
+			<View style={styles.container}>
+				<Animatable.View
+					animation="fadeInUp"
+					delay={200}
+					useNativeDriver
+				>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => navigation.navigate("Нумерология")}
+					>
+						<Animatable.View
+							animation="pulse"
+							easing="ease-out"
+							delay={200}
+							iterationCount="infinite"
+							style={styles.buttonGlow}
+						/>
+						<Text style={styles.buttonText}>Нумерология</Text>
+					</TouchableOpacity>
+				</Animatable.View>
+				<Animatable.View
+					animation="fadeInUp"
+					delay={300}
+					useNativeDriver
+				>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => navigation.navigate("Астрология")}
+					>
+						<Animatable.View
+							animation="pulse"
+							easing="ease-out"
+							delay={300}
+							iterationCount="infinite"
+							style={styles.buttonGlow}
+						/>
+						<Text style={styles.buttonText}>Астрология</Text>
+					</TouchableOpacity>
+				</Animatable.View>
+			</View>
+		</ImageBackground>
 	);
 }
-
 export default function Application() {
 	return (
 		<StateProvider>
@@ -34,12 +72,21 @@ export default function Application() {
 				<Stack.Navigator
 					screenOptions={{
 						headerStyle: {
-							backgroundColor: "#f8f8f8",
+							backgroundColor: "#0c0c0c",
+							headerTransparent: "systemMaterialDark",
 						},
 						headerTitleStyle: {
-							fontWeight: "bold",
+							fontSize: 30,
+							fontWeight: "Regular",
+							color: "#ffffff",
 						},
-						headerTintColor: "#333",
+						statusBarStyle: "light",
+						animationTypeForReplace: "pop",
+						animation: "slide_from_bottom",
+						headerTintColor: "#ffffff",
+						statusBarColor: "#0c0c0c",
+						headerTitleAlign: "center",
+						headerBackTitle: "Назад",
 					}}
 				>
 					<Stack.Screen
@@ -64,28 +111,49 @@ export default function Application() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#f8f8f8",
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	button: {
-		backgroundColor: "#ffffff",
-		paddingVertical: 12,
+		paddingVertical: 15,
 		paddingHorizontal: 24,
-		marginVertical: 10,
-		borderRadius: 10,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.23,
-		shadowRadius: 2.62,
-		elevation: 4,
+		marginVertical: 15,
+		width: width * 0.85,
+		height: 75,
+		elevation: 10,
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	buttonText: {
-		color: "#007aff",
-		fontSize: 18,
-		fontWeight: "600",
+		color: "#ffffff",
+		fontSize: 34,
+		fontWeight: "700",
+		fontFamily: "Jura-Medium",
+		textAlign: "center",
+		textShadowColor: "#5c49ee",
+		textShadowOffset: { width: 0, height: 0 },
+		textShadowRadius: 10,
+	},
+	buttonGlow: {
+		...StyleSheet.absoluteFillObject,
+		backgroundColor: "transparent",
+		borderRadius: 120,
+		opacity: 0.2,
+		borderColor: "#7a68ff",
+		backgroundColor: "#5c49ee",
+		borderWidth: 1,
+		shadowColor: "#5c49ee",
+		shadowOffset: {
+			width: 0,
+			height: 0,
+		},
+		shadowOpacity: 0.8,
+		shadowRadius: 15,
+	},
+	background: {
+		flex: 1,
+		width: "100%",
+		height: "100%",
+		resizeMode: "cover", // Заполнение с обрезкой лишнего
 	},
 });
